@@ -16,6 +16,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Set the views directory (where your templates are located)
 app.set('views', path.join(__dirname, 'src/views'));
 
+app.use((req, res, next) => {
+    // Get the current year for copyright notice
+    res.locals.currentYear = new Date().getFullYear();
+    next();
+})
+
 // Define a route handler for the root URL ('/')
 app.get('/', (req, res) => {
     const title = 'Home Page';
@@ -41,7 +47,61 @@ app.get('/contact', (req, res) => {
         </form>`;
     res.render('index', { title, content, NODE_ENV, PORT });
 });
+
+// Updated route to use EJS template
+app.get('/explore/:category/:id', (req, res) => {
+    // Destructure the parameters
+    const { category, id } = req.params;
+
+    const { sort = 'default', filter = 'none' } = req.query;
  
+    // Log the params to the console for debugging
+    console.log('Route Parameters:', req.params);
+    console.log('Query Parameters:', req.query);
+ 
+    // Set the title for the page
+    const title = `Exploring ${category}`;
+ 
+    // Render the EJS template with the parameters
+    res.render('explore', { title, category, id, sort, filter, NODE_ENV, PORT });
+});
+ 
+/**
+ * Error Handling Middleware
+ */
+// Test route that explicitly creates and forwards an error
+app.get('/manual-error', (req, res, next) => {
+    const err = new Error('This is a manually triggered error');
+    err.status = 500;
+    next(err); // Forward to the global error handler
+});
+ 
+// Catch-all middleware for unmatched routes (404)
+app.use((req, res, next) => {
+    const err = new Error('Page Not Found');
+    err.status = 404;
+    next(err); // Forward to the global error handler
+});
+
+// Global error handler middleware
+app.use((err, req, res, next) => {
+    // Log the error for debugging
+    console.error(err.stack);
+ 
+    // Set default status and determine error type
+    const status = err.status || 500;
+    const context = {
+        title: status === 404 ? 'Page Not Found' : 'Internal Server Error',
+        error: err.message,
+        stack: err.stack,
+        NODE_ENV, // <-- Fixed this line
+        PORT 
+    };
+ 
+    // Render the appropriate template based on status code
+    res.status(status).render(`errors/${status === 404 ? '404' : '500'}`, context);
+});
+
  // When in development mode, start a WebSocket server for live reloading
 if (NODE_ENV.includes('dev')) {
     const ws = await import('ws');
