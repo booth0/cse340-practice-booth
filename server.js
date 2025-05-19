@@ -23,6 +23,7 @@ app.set('views', path.join(__dirname, 'src/views'));
 app.use((req, res, next) => {
     // Get the current year for copyright notice
     res.locals.currentYear = new Date().getFullYear();
+    res.locals.NODE_ENV = process.env.NODE_ENV || 'development';
     next();
 })
 
@@ -112,14 +113,14 @@ const validateDisplayMode = (req, res, next) => {
 app.get('/', (req, res) => {
     const title = 'Home Page';
     const content = '<h1>Welcome to the Home Page</h1><p>This is the main content of the home page.</p>';
-    res.render('index', { title, content, NODE_ENV, PORT });
+    res.render('index', { title, content });
 });
 app.get('/about', (req, res) => {
     const title = 'About Me';
     const content = `
         <h1>About Me</h1>
         <p>My name is Adam Booth. I'm from Mesa, AZ, but am currently living in Rexburg with my wife Scarlet while I finish up my Software Engineering degree. We got sealed in the Mesa Temple last August and married life has been great! I really enjoy playing with video games as well as fixing and modding old consoles.</p>`;
-    res.render('index', { title, content, NODE_ENV, PORT });
+    res.render('index', { title, content });
 });
 app.get('/contact', (req, res) => {
     const title = 'Contact Us';
@@ -131,14 +132,14 @@ app.get('/contact', (req, res) => {
             <textarea name="message" placeholder="Message"></textarea><br>
             <input type="submit" value="Submit">
         </form>`;
-    res.render('index', { title, content, NODE_ENV, PORT });
+    res.render('index', { title, content });
 });
 
 // Products page route with display mode validation
 app.get('/products/:display', validateDisplayMode, (req, res) => {
     const title = "Our Products";
     const { display } = req.params;
-    res.render('products', { title, products, display, NODE_ENV, PORT });
+    res.render('products', { title, products, display });
 });
  
 // Default products route (redirects to grid view)
@@ -161,7 +162,7 @@ app.get('/explore/:category/:id', (req, res) => {
     const title = `Exploring ${category}`;
  
     // Render the EJS template with the parameters
-    res.render('explore', { title, category, id, sort, filter, NODE_ENV, PORT });
+    res.render('explore', { title, category, id, sort, filter });
 });
  
 /**
@@ -192,7 +193,6 @@ app.use((err, req, res, next) => {
         title: status === 404 ? 'Page Not Found' : 'Internal Server Error',
         error: err.message,
         stack: err.stack,
-        NODE_ENV, // <-- Fixed this line
         PORT 
     };
  
