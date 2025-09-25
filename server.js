@@ -3,79 +3,47 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
-// Import route handlers from their new locations
-import indexRoutes from './src/routes/index.js';
-import productRoutes from './src/routes/products/index.js';
 
-// Import global middleware
-import { addGlobalData } from './src/middleware/index.js'
- 
-
-/**
- * Define important variables
- */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const NODE_ENV = process.env.NODE_ENV || 'production';
+
 const PORT = process.env.PORT || 3000;
 
 // Create an instance of an Express application
 const app = express();
 
-
-// Serve static files from the public directory
-app.use(express.static(path.join(__dirname, 'public')));
- 
 // Set the view engine to EJS
 app.set('view engine', 'ejs');
- 
+app.use(express.static(path.join(__dirname, 'public')));
 // Set the views directory (where your templates are located)
 app.set('views', path.join(__dirname, 'src/views'));
 
-/**
- * Middleware Functions 
- */
-
-app.use(addGlobalData)
-
-/**
- * Routes
- */
-app.use('/', indexRoutes);
-app.use('/products', productRoutes);
- 
-// 404 Error Handler
-app.use((req, res, next) => {
-    const err = new Error('Page Not Found');
-    err.status = 404;
-    next(err); // Forward to the global error handler
+// Define a route handler for the root URL ('/')
+app.get('/', (req, res) => {
+    const title = 'Welcome Home';
+    res.render('home', { title });
 });
- 
-// Global Error Handler
-app.use((err, req, res, next) => {
-    // Log the error for debugging
-    console.error(err.stack);
- 
-    // Set default status and determine error type
-    const status = err.status || 500;
-    const context = {
-        title: status === 404 ? 'Page Not Found' : 'Internal Server Error',
-        error: err.message,
-        stack: err.stack
-    };
- 
-    // Render the appropriate template based on status code
-    res.status(status).render(`errors/${status === 404 ? '404' : '500'}`, context);
+app.get('/about', (req, res) => {
+    const title = 'About Me';
+    res.render('about', { title });
 });
- 
-/**
- * Start the server
- */
- 
+app.get('/products', (req, res) => {
+    const title = 'Our Products';
+    res.render('products', { title });
+});
+app.get('/student', (req, res) => {
+    const title = 'Student Info';
+    const name = 'Jeff Stone';
+    const id_num = '206206';
+    const email = 'jeff.stone@student.edu';
+    const address = '24 E 5th N, Rexburg, ID 83440';
+    res.render('student', { title, name, id_num, email, address });
+});
 // When in development mode, start a WebSocket server for live reloading
 if (NODE_ENV.includes('dev')) {
     const ws = await import('ws');
- 
+
     try {
         const wsPort = parseInt(PORT) + 1;
         const wsServer = new ws.WebSocketServer({ port: wsPort });
@@ -91,8 +59,8 @@ if (NODE_ENV.includes('dev')) {
         console.error('Failed to start WebSocket server:', error);
     }
 }
- 
-// Start the Express server on the specified port
+
+// Start the server and listen on the specified port
 app.listen(PORT, () => {
     console.log(`Server is running on http://127.0.0.1:${PORT}`);
 });

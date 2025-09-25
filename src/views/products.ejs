@@ -1,31 +1,13 @@
 <%- include('partials/header') %>
 <main>
-    <h1><%- title %></h1>
- 
-    <!--
-        This block of code dynamically adjusts the layout of the products page.  It uses a
-        simple condition to switch between two display modes: "grid view" or "details view." 
-
-        Depending on the value of the "display" variable, the page will either show products
-        in a grid format with multiple items per row, or in a detailed format with one item
-        per row and more information displayed.
-    -->
-    <div class="products-container <%= display === 'grid' ? 'grid-view' : 'details-view' %>">
-        <% Object.entries(items).forEach(([itemId, product]) => { %>
-            <div class="product-card">
-                <img src="<%= product.image %>" alt="<%= product.name %>" class="product-image">
-                <div class="product-info">
-                    <h2 class="product-name"><a href="/products/"><%= product.name %></a></h2>
-                    <p class="product-description"><%= product.description %></p>
-                    <p class="product-price">$<%= product.price.toFixed(2) %></p>
-                </div>
-            </div>
-        <% }); %>
-    </div>
- 
-    <div class="view-toggle">
-        <a href="/grid" class="<%= display === 'grid' ? 'active' : '' %>">Grid View</a> | 
-        <a href="/details" class="<%= display === 'details' ? 'active' : '' %>">Details View</a>
-    </div>
+    <h1><%= title %></h1>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/products">Products</a></li>
+        </ul>
+    </nav>
+    <p>We have many wonderful products here!</p>
 </main>
 <%- include('partials/footer') %>
