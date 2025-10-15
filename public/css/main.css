@@ -5,6 +5,9 @@ html, body {
     padding: 20px;
 }
 body {
+    &.blue-theme { background-color: #096aaf; }
+    &.green-theme { background-color: #22c722; }
+    &.red-theme { background-color: #b51c33; }
     nav {
         ul {
             list-style-type: none;
