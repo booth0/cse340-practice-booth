@@ -50,10 +50,13 @@ const courses = {
 // Create an instance of an Express application
 const app = express();
 
-// Set the view engine to EJS
-app.set('view engine', 'ejs');
+// Setup public directory
 app.use(express.static(path.join(__dirname, 'public')));
-// Set the views directory (where your templates are located)
+
+// Setup EJS (templating engine
+app.set('view engine', 'ejs');
+
+// Setup views directory (templates)
 app.set('views', path.join(__dirname, 'src/views'));
 
 /**
@@ -113,6 +116,11 @@ app.use((req, res, next) => {
     res.locals.queryParams = req.query;
 
     next();
+});
+
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next(); // Pass control to the next middleware or route
 });
 
 // Route-specific middleware that sets custom headers
