@@ -1,0 +1,25 @@
+<%- include('partials/header') %>
+<main>
+    <h1>Courses by Department</h1>
+    <p>Browse our courses organized by academic department.</p>
+    
+    <% Object.entries(departments).forEach(([deptCode, courses]) => { %>
+        <section class="department-section">
+            <h2><%= deptCode %> Department</h2>
+            <div class="course-list">
+                <% courses.forEach(course => { %>
+                    <div class="course-card">
+                        <h3><a href="/catalog/<%= course.id %>"><%= course.title %></a></h3>
+                        <p class="course-id"><%= course.id %> • <%= course.credits %> credits</p>
+                        <p class="course-description"><%= course.description %></p>
+                    </div>
+                <% }); %>
+            </div>
+        </section>
+    <% }); %>
+    
+    <div class="navigation">
+        <p><a href="/catalog">&larr; Back to Course Catalog</a></p>
+    </div>
+</main>
+<%- include('partials/footer') %>
