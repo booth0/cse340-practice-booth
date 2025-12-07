@@ -1,0 +1,22 @@
+<%- include('../partials/header') %>
+<main>
+    <div class="member-header">
+        <h1><%= title %></h1>
+    </div>
+
+        <div class="member-list">
+            <div class="member-card">
+                <div>Office: <%= member.office %></div>
+                <div>Phone: <%= member.phone %></div>
+                <div>Email: <%= member.email %></div>
+                <div>Department: <%= member.department %></div>
+                <div>Title: <%= member.title %></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <p><a href="/faculty">&larr; Back to Faculty Directory</a></p>
+    </div>
+</main>
+<%- include('../partials/footer') %>

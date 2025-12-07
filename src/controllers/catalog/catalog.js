@@ -25,15 +25,6 @@ const catalogPage = (req, res) => {
         courses: courses,
         filters: appliedFilters
     });
-
-
-
-    // const courses = getAllCourses();
-
-    // res.render('catalog', {
-    //     title: 'Course Catalog',
-    //     courses: courses
-    // });
 };
 
 // Route handler for individual course detail pages
